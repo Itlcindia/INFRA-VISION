@@ -1,3 +1,5 @@
+DirectoryIndex dist/index.html index.html index.php
+
 # Enable Rewrite Engine
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -11,16 +13,20 @@
   RewriteCond %{REQUEST_URI} ^/api/ [NC]
   RewriteRule ^ - [L]
 
-  # 2. If the request is a physical file or folder in the root, serve it directly
+  # 2. Route root request and index.html explicitly to dist/index.html
+  RewriteRule ^$ dist/index.html [L]
+  RewriteRule ^index\.html$ dist/index.html [L]
+
+  # 3. Rewrite assets and static files requests to the dist folder
+  RewriteRule ^(assets/.*)$ dist/$1 [L,NC]
+  RewriteRule ^(favicon\.svg|globe\.svg|file\.svg|window\.svg|next\.svg|vercel\.svg|icons\.svg|robots\.txt|sitemap\.xml)$ dist/$1 [L,NC]
+
+  # 4. If request is an existing physical file or folder, serve it directly
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 3. Rewrite assets and static files requests to the dist folder (removes DOCUMENT_ROOT dependency)
-  RewriteRule ^(assets/.*)$ dist/$1 [L,NC]
-  RewriteRule ^(favicon\.svg|globe\.svg|file\.svg|window\.svg|next\.svg|vercel\.svg|icons\.svg)$ dist/$1 [L,NC]
-
-  # 4. Rewrite all other queries (like /admin, /services) to dist/index.html for React SPA routing
+  # 5. Rewrite all other queries (like /admin, /services, /projects) to dist/index.html for React SPA routing
   RewriteRule ^(.*)$ dist/index.html [L]
 </IfModule>
 
