@@ -12,10 +12,10 @@ import { execSync } from 'child_process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Run production build on startup if the build folder doesn't exist
-const buildPath = path.join(__dirname, 'build');
-if (!fs.existsSync(buildPath) || !fs.existsSync(path.join(buildPath, 'index.html'))) {
-  console.log("Build directory not found or incomplete. Running npm run build...");
+// Run production build on startup if the dist folder doesn't exist
+const distPath = path.join(__dirname, 'dist');
+if (!fs.existsSync(distPath) || !fs.existsSync(path.join(distPath, 'index.html'))) {
+  console.log("Dist directory not found or incomplete. Running npm run build...");
   try {
     execSync('npm run build', { stdio: 'inherit', cwd: __dirname });
     console.log("Build completed successfully!");
@@ -544,6 +544,14 @@ app.delete('/api/testimonials.php', checkAuth, async (req, res) => {
 
 app.get('/api/blogs.php', async (req, res) => {
   try {
+    const { slug } = req.query;
+    if (slug) {
+      const [rows] = await pool.query("SELECT * FROM blogs WHERE slug = ?", [slug]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "Blog post not found." });
+      }
+      return res.json(rows[0]);
+    }
     const [rows] = await pool.query("SELECT * FROM blogs ORDER BY published_date DESC");
     res.json(rows);
   } catch (err) {
@@ -590,49 +598,7 @@ app.delete('/api/blogs.php', checkAuth, async (req, res) => {
   }
 });
 
-// ==========================================
-// 8. Clients CRUD
-// ==========================================
 
-app.get('/api/clients.php', async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM clients ORDER BY id DESC");
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch clients: " + err.message });
-  }
-});
-
-app.post('/api/clients.php', checkAuth, async (req, res) => {
-  const { id, name, image } = req.body;
-  if (!name || !image) {
-    return res.status(400).json({ error: "Client Name and Image path are required." });
-  }
-
-  try {
-    if (parseInt(id) > 0) {
-      await pool.query("UPDATE clients SET name = ?, image = ? WHERE id = ?", [name, image, id]);
-      res.json({ success: true, message: "Client updated successfully!" });
-    } else {
-      await pool.query("INSERT INTO clients (name, image) VALUES (?, ?)", [name, image]);
-      res.json({ success: true, message: "Client added successfully!" });
-    }
-  } catch (err) {
-    res.status(500).json({ error: "Database error: " + err.message });
-  }
-});
-
-app.delete('/api/clients.php', checkAuth, async (req, res) => {
-  const id = parseInt(req.query.id) || 0;
-  if (id <= 0) return res.status(400).json({ error: "Invalid Client ID." });
-
-  try {
-    await pool.query("DELETE FROM clients WHERE id = ?", [id]);
-    res.json({ success: true, message: "Client deleted successfully!" });
-  } catch (err) {
-    res.status(500).json({ error: "Database error: " + err.message });
-  }
-});
 
 // ==========================================
 // 9. Partners CRUD
@@ -756,6 +722,20 @@ app.delete('/api/notifications.php', checkAuth, async (req, res) => {
 // ==========================================
 
 app.get('/api/admins.php', checkAuth, async (req, res) => {
+  const action = req.query.action ? req.query.action.trim() : '';
+
+  if (action === 'get_profile') {
+    try {
+      const [rows] = await pool.query("SELECT name, email FROM admins WHERE email = ?", [req.user.email]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "Admin profile not found." });
+      }
+      return res.json(rows[0]);
+    } catch (err) {
+      return res.status(500).json({ error: "Database error: " + err.message });
+    }
+  }
+
   // Enforce Super Admin check for lists
   if (req.user.role !== 'Super Admin') {
     return res.status(403).json({ error: "Access denied. Only Super Admin can manage admin accounts." });
@@ -771,6 +751,49 @@ app.get('/api/admins.php', checkAuth, async (req, res) => {
 
 app.post('/api/admins.php', checkAuth, async (req, res) => {
   const action = req.query.action ? req.query.action.trim() : '';
+
+  // Change Username Action (update email/username independently)
+  if (action === 'change_username') {
+    const { new_username } = req.body;
+
+    if (!new_username || new_username.trim() === '') {
+      return res.status(400).json({ error: "Username is required." });
+    }
+
+    try {
+      const [rows] = await pool.query("SELECT * FROM admins WHERE email = ?", [req.user.email]);
+      const dbUser = rows[0];
+
+      if (!dbUser) {
+        return res.status(404).json({ error: "Admin user not found." });
+      }
+
+      if (new_username.trim() !== req.user.email) {
+        const [existing] = await pool.query("SELECT id FROM admins WHERE email = ?", [new_username.trim()]);
+        if (existing.length > 0) {
+          return res.status(400).json({ error: "Username is already taken." });
+        }
+      }
+
+      await pool.query("UPDATE admins SET email = ? WHERE email = ?", [new_username.trim(), req.user.email]);
+
+      // Generate new token reflecting updated email
+      const payload = JSON.stringify({
+        email: new_username.trim(),
+        name: dbUser.name,
+        role: req.user.role,
+        exp: Math.floor(Date.now() / 1000) + 86400
+      });
+      const payloadEncoded = Buffer.from(payload).toString('base64');
+      const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+      const signatureEncoded = Buffer.from(signature).toString('base64');
+      const newToken = `${payloadEncoded}.${signatureEncoded}`;
+
+      return res.json({ success: true, message: "Username updated successfully!", token: newToken });
+    } catch (err) {
+      return res.status(500).json({ error: "Database error: " + err.message });
+    }
+  }
 
   // 1. Change Password Action (Any admin user can run this on their own account)
   if (action === 'change_password') {
@@ -1018,17 +1041,33 @@ app.post('/api/upload.php', checkAuth, upload.any(), async (req, res) => {
   const subDir = isVid ? 'videos' : `images/${section}`;
 
   const relativePath = `assets/${subDir}/${file.filename}`;
-  const distDest = path.join(__dirname, 'build', relativePath);
+  const actualDest = path.join(__dirname, 'public', relativePath);
+  const distDest = path.join(__dirname, 'dist', relativePath);
 
-  // Copy to build folder (build/) as well to serve instantly in production
+  // If the file was saved in a different subdirectory (e.g. general) because multer body parsing timing,
+  // move it to the correct directory now!
+  if (path.normalize(file.path) !== path.normalize(actualDest)) {
+    try {
+      const actualSubdirPath = path.join(__dirname, 'public', 'assets', subDir);
+      if (!fs.existsSync(actualSubdirPath)) {
+        fs.mkdirSync(actualSubdirPath, { recursive: true });
+      }
+      fs.renameSync(file.path, actualDest);
+      file.path = actualDest; // Update path reference
+    } catch (renameErr) {
+      console.error("Failed to move file to section directory:", renameErr.message);
+    }
+  }
+
+  // Copy to dist folder (dist/) as well to serve instantly in production
   try {
-    const distSubdirPath = path.join(__dirname, 'build', 'assets', subDir);
+    const distSubdirPath = path.join(__dirname, 'dist', 'assets', subDir);
     if (!fs.existsSync(distSubdirPath)) {
       fs.mkdirSync(distSubdirPath, { recursive: true });
     }
     fs.copyFileSync(file.path, distDest);
   } catch (err) {
-    console.error("Failed to copy uploaded asset to build:", err.message);
+    console.error("Failed to copy uploaded asset to dist:", err.message);
   }
 
   res.json({
@@ -1042,12 +1081,12 @@ app.post('/api/upload.php', checkAuth, upload.any(), async (req, res) => {
 // 16. Static Files & Single Page App Fallback
 // ==========================================
 
-// Serve static React production build files from build/
-app.use(express.static(path.join(__dirname, 'build')));
+// Serve static React production build files from dist/
+app.use(express.static(path.join(__dirname, 'dist')));
 
-// Fallback SPA routing (redirect all non-matched browser queries like /admin to build/index.html)
+// Fallback SPA routing (redirect all non-matched browser queries like /admin to dist/index.html)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Start Gateway Server

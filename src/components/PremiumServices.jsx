@@ -1,32 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PremiumServices = ({ setCurrentPage }) => {
-  const premiumServicesData = [
-    {
-      image: 'assets/images/service_residential.jpg',
-      number: '01',
-      title: 'PROPERTY SHOWCASE',
-      description: 'Sleek high-impact studio that elevates your property\'s visual presence.'
-    },
-    {
-      image: 'assets/images/service_commercial.jpg',
-      number: '02',
-      title: 'SITE PLANNING',
-      description: 'Comprehensive zoning compliance and site grading layout engineering.'
-    },
-    {
-      image: 'assets/images/service_renovation.jpg',
-      number: '03',
-      title: 'BUILDING DESIGN',
-      description: 'State-of-the-art virtual blueprints and architectural structural layouts.'
-    },
-    {
-      image: 'assets/images/process_planning.jpg',
-      number: '04',
-      title: 'SPACE PLANNING',
-      description: 'Optimized interior load paths and custom open-concept room divisions.'
-    }
-  ];
+  const [servicesData, setServicesData] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/services.php')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setServicesData(data.slice(0, 4));
+        }
+      })
+      .catch(err => console.error("Error fetching premium services:", err));
+  }, []);
+
+
 
   return (
     <section className="premium-services-section">
@@ -46,18 +34,28 @@ const PremiumServices = ({ setCurrentPage }) => {
         </div>
         
         <div className="premium-services-grid scroll-reveal delay-200">
-          {premiumServicesData.map((service, idx) => (
-            <div key={idx} className="premium-service-card">
-              <div className="premium-service-image-wrapper">
-                <img src={service.image} alt={service.title} className="premium-service-img" />
+          {servicesData.length > 0 ? (
+            servicesData.map((service, idx) => (
+              <div key={service.id || idx} className="premium-service-card">
+                <div className="premium-service-image-wrapper">
+                  <img 
+                    src={service.image ? (service.image.startsWith('http') || service.image.startsWith('/') ? service.image : '/' + service.image) : ''} 
+                    alt={service.title} 
+                    className="premium-service-img" 
+                  />
+                </div>
+                <div className="premium-service-info">
+                  <span className="premium-service-number">{String(idx + 1).padStart(2, '0')}</span>
+                  <h3 className="premium-service-card-title">{service.title}</h3>
+                  <p className="premium-service-desc">{service.description}</p>
+                </div>
               </div>
-              <div className="premium-service-info">
-                <span className="premium-service-number">{service.number}</span>
-                <h3 className="premium-service-card-title">{service.title}</h3>
-                <p className="premium-service-desc">{service.description}</p>
-              </div>
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '40px 0', color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' }}>
+              No services uploaded yet. Please add services from the Admin Panel.
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

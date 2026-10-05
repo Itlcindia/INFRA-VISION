@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
 const OurPartners = () => {
-  const [partners, setPartners] = useState([
-    { name: 'Godrej', image: 'svg-godrej' },
-    { name: 'Havells', image: 'svg-havells' },
-    { name: 'Sony', image: 'svg-sony' },
-    { name: 'Asian Paints', image: 'svg-asianpaints' },
-    { name: 'Jaguar', image: 'svg-jaquar' },
-    { name: 'Bajaj', image: 'svg-bajaj' },
-    { name: 'Tata Steel', image: 'svg-tata' },
-    { name: 'Ultratech Cement', image: 'svg-ultratech' },
-    { name: 'Kajaria', image: 'svg-kajaria' }
-  ]);
+  const [partners, setPartners] = useState([]);
 
   useEffect(() => {
     fetch('/api/partners.php')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) setPartners(data);
+        if (Array.isArray(data)) setPartners(data);
       })
       .catch(err => console.log('Error loading partners:', err));
   }, []);
+
+
 
   const brandLogos = {
     'Godrej': (

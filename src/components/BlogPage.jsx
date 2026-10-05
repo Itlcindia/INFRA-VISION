@@ -148,10 +148,8 @@ const BlogPage = ({ setCurrentPage }) => {
                 onClick={(e) => handleReadMore(e, blog.slug)}
               >
                 <div className="card-image-panel">
-                  <img src={blog.featured_image} alt={blog.title} className="card-panel-img" />
-                  <div className="card-panel-overlay">
-                    <span>Read Article <i className="fa-solid fa-arrow-right"></i></span>
-                  </div>
+                  <img src={blog.featured_image ? (blog.featured_image.startsWith('http') || blog.featured_image.startsWith('/') ? blog.featured_image : '/' + blog.featured_image) : ''} alt={blog.title} className="card-panel-img" />
+                  <div className="card-panel-overlay"></div>
                 </div>
                 <div className="card-content-panel">
                   <div className="blog-meta-row" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>

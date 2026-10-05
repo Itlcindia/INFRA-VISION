@@ -62,12 +62,7 @@ const InteriorPage = ({ setCurrentPage }) => {
 
   const [galleryImages, setGalleryImages] = useState(defaultImages);
 
-  const defaultVideos = [
-    { id: 'v1', title: 'Modern Living Space Walkthrough', video_path: 'assets/video.mp4' },
-    { id: 'v2', title: 'Minimalist Kitchen Concept', video_path: 'assets/video.mp4' },
-    { id: 'v3', title: 'Luxury Penthouse Suite Tour', video_path: 'assets/video.mp4' }
-  ];
-  const [videos, setVideos] = useState(defaultVideos);
+  const [videos, setVideos] = useState([]);
   const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
 
   useEffect(() => {

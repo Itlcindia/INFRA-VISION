@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const OurClients = () => {
-  const [clients, setClients] = useState([
-    { name: 'Marcus Vance', image: 'assets/images/clients/client1.jpg' },
-    { name: 'Sophia Bennett', image: 'assets/images/clients/client2.jpg' },
-    { name: 'David Chen', image: 'assets/images/clients/client3.jpg' },
-    { name: 'Elena Rostova', image: 'assets/images/clients/client4.jpg' }
-  ]);
+  const [clients, setClients] = useState([]);
 
   useEffect(() => {
     fetch('/api/clients.php')
@@ -16,6 +11,8 @@ const OurClients = () => {
       })
       .catch(err => console.log('Error loading clients:', err));
   }, []);
+
+
 
   const isFontAwesome = (str) => {
     return typeof str === 'string' && (str.startsWith('fa-') || str.startsWith('fas ') || str.startsWith('fab '));

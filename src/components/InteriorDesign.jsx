@@ -1,32 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const InteriorDesign = ({ setCurrentPage }) => {
-  const interiorShowcaseData = [
-    {
-      image: 'assets/images/interior_living.jpg',
-      number: '01',
-      title: 'MODERN LIVING ROOMS',
-      description: 'Sophisticated open-concept layouts integrating custom ambient light installations, natural hardwoods, and premium textures.'
-    },
-    {
-      image: 'assets/images/interior_kitchen.jpg',
-      number: '02',
-      title: 'MINIMALIST KITCHENS',
-      description: 'State-of-the-art culinary studios featuring clean lines, premium stone countertops, and hidden storage integration.'
-    },
-    {
-      image: 'assets/images/interior_bedroom.jpg',
-      number: '03',
-      title: 'LUXURIOUS MASTER BEDROOMS',
-      description: 'Cozy sanctuaries blending warm lighting structures, custom upholstered accents, and acoustic wall panels.'
-    },
-    {
-      image: 'assets/images/interior_dining.jpg',
-      number: '04',
-      title: 'CREATIVE DINING SPACES',
-      description: 'Airy entertainment zones with custom furniture curation, statement pendant lighting, and seamless garden views.'
-    }
-  ];
+  const [interiorData, setInteriorData] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/interior.php')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setInteriorData(data.slice(0, 4));
+        }
+      })
+      .catch(err => console.error("Error fetching interior showcase:", err));
+  }, []);
+
+
 
   return (
     <section className="interior-showcase-section">
@@ -54,23 +42,29 @@ const InteriorDesign = ({ setCurrentPage }) => {
         </div>
         
         <div className="premium-services-grid scroll-reveal delay-200" style={{ marginTop: '40px' }}>
-          {interiorShowcaseData.map((item, idx) => (
-            <div key={idx} className="premium-service-card" style={{ transition: 'transform 0.4s ease, box-shadow 0.4s ease' }}>
-              <div className="premium-service-image-wrapper" style={{ overflow: 'hidden' }}>
-                <img 
-                  src={item.image} 
-                  alt={item.title} 
-                  className="premium-service-img" 
-                  style={{ transition: 'transform 0.5s ease' }} 
-                />
+          {interiorData.length > 0 ? (
+            interiorData.map((item, idx) => (
+              <div key={item.id || idx} className="premium-service-card" style={{ transition: 'transform 0.4s ease, box-shadow 0.4s ease' }}>
+                <div className="premium-service-image-wrapper" style={{ overflow: 'hidden' }}>
+                  <img 
+                    src={item.image ? (item.image.startsWith('http') || item.image.startsWith('/') ? item.image : '/' + item.image) : ''} 
+                    alt={item.title} 
+                    className="premium-service-img" 
+                    style={{ transition: 'transform 0.5s ease' }} 
+                  />
+                </div>
+                <div className="premium-service-info">
+                  <span className="premium-service-number" style={{ color: '#3D5EE1' }}>{String(idx + 1).padStart(2, '0')}</span>
+                  <h3 className="premium-service-card-title">{item.title}</h3>
+                  <p className="premium-service-desc">{item.description}</p>
+                </div>
               </div>
-              <div className="premium-service-info">
-                <span className="premium-service-number" style={{ color: '#3D5EE1' }}>{item.number}</span>
-                <h3 className="premium-service-card-title">{item.title}</h3>
-                <p className="premium-service-desc">{item.description}</p>
-              </div>
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '40px 0', color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' }}>
+              No interior designs uploaded yet. Please add designs from the Admin Panel.
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

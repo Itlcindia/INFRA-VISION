@@ -71,7 +71,6 @@ const Footer = ({ setCurrentPage }) => {
             <li><a href="/interior" onClick={(e) => navigateToPage(e, 'interior')}>Interior</a></li>
             <li><a href="/about" onClick={(e) => navigateToPage(e, 'about')}>About Us</a></li>
             <li><a href="/contact" onClick={(e) => navigateToPage(e, 'contact')}>Contact</a></li>
-            <li><a href="/blog" onClick={(e) => navigateToPage(e, 'blog')}>Blog</a></li>
           </ul>
         </div>
 
@@ -102,10 +101,19 @@ const Footer = ({ setCurrentPage }) => {
       {/* Bottom copyright bar */}
       <div className="footer-bottom" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', padding: '30px 0' }}>
         <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', textAlign: 'center' }}>
-          <p className="copyright" style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)' }}>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '15px' }}>
+            <a href="/privacy-policy" onClick={(e) => navigateToPage(e, 'privacy-policy')} style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none', fontSize: '0.8rem', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#FFFFFF'} onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}>Privacy Policy</a>
+            <span style={{ color: 'rgba(255, 255, 255, 0.2)', fontSize: '0.8rem' }}>|</span>
+            <a href="/terms-of-service" onClick={(e) => navigateToPage(e, 'terms-of-service')} style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none', fontSize: '0.8rem', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#FFFFFF'} onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}>Terms of Service</a>
+            <span style={{ color: 'rgba(255, 255, 255, 0.2)', fontSize: '0.8rem' }}>|</span>
+            <a href="/disclaimer" onClick={(e) => navigateToPage(e, 'disclaimer')} style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none', fontSize: '0.8rem', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#FFFFFF'} onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}>Disclaimer</a>
+            <span style={{ color: 'rgba(255, 255, 255, 0.2)', fontSize: '0.8rem' }}>|</span>
+            <a href="/sitemap" onClick={(e) => navigateToPage(e, 'sitemap')} style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none', fontSize: '0.8rem', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#FFFFFF'} onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}>Sitemap</a>
+          </div>
+          <p className="copyright" style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
             &copy; 2015-2026 InfraVision by ITLC India Pvt Ltd. All rights reserved.
           </p>
-          <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '0.8rem' }}>
+          <span style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '0.8rem' }}>
             Website design by ITLC India Pvt Ltd.
           </span>
         </div>

@@ -1,35 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 const Blog = ({ setCurrentPage }) => {
-  const [blogs, setBlogs] = useState([
-    {
-      id: 1,
-      image: 'assets/images/project6.jpg',
-      category: 'Sustainability',
-      title: 'The Future of Green Building Materials',
-      excerpt: 'Discover how recycled steel, bamboo framing, and eco-concrete are driving down carbon footprints in modern premium construction projects.'
-    },
-    {
-      id: 2,
-      image: 'assets/images/project2.jpg',
-      category: 'Innovation',
-      title: 'Integrating Smart Technology in Commercial Sites',
-      excerpt: 'From automated energy grids to touchless building entry, explore how IoT is reshaping modern architectural designs.'
-    },
-    {
-      id: 3,
-      image: 'assets/images/about.jpg',
-      category: 'Safety',
-      title: 'Key Safety Protocols on Active High-Rise Sites',
-      excerpt: 'A detailed look at the structural safety measures, scaffolding rules, and audits that keep our active builds completely incident-free.'
-    }
-  ]);
+  const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
     fetch('/api/blogs.php')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setBlogs(data);
         }
       })
@@ -41,6 +19,8 @@ const Blog = ({ setCurrentPage }) => {
     window.history.pushState(null, '', `/blog/${slug}`);
     window.dispatchEvent(new Event('popstate'));
   };
+
+
 
   return (
     <section id="blog" className="blog-section section-padding">
@@ -68,25 +48,30 @@ const Blog = ({ setCurrentPage }) => {
 
         {/* 3-Card Grid */}
         <div className="grid-layout blog-grid scroll-reveal">
-          {blogs.slice(0, 3).map((blog) => (
-            <div key={blog.id} className="card blog-card">
-              <div className="blog-img-wrapper">
-                <img src={blog.featured_image || blog.image} alt={blog.title} className="blog-card-img" />
-                <span className="blog-category-badge">{blog.category || 'News'}</span>
+          {blogs.length > 0 ? (
+            blogs.slice(0, 3).map((blog) => (
+              <div key={blog.id} className="card blog-card">
+                <div className="blog-img-wrapper">
+                  <img src={blog.featured_image ? (blog.featured_image.startsWith('http') || blog.featured_image.startsWith('/') ? blog.featured_image : '/' + blog.featured_image) : (blog.image ? (blog.image.startsWith('http') || blog.image.startsWith('/') ? blog.image : '/' + blog.image) : '')} alt={blog.title} className="blog-card-img" />
+                </div>
+                <div className="blog-card-content">
+                  <h3 className="blog-card-title">{blog.title}</h3>
+                  <p className="blog-card-excerpt">{blog.excerpt}</p>
+                  <a 
+                    href={`/blog/${blog.slug}`} 
+                    className="blog-read-more"
+                    onClick={(e) => handleReadMore(e, blog.slug)}
+                  >
+                    Read More <i className="fa-solid fa-arrow-right icon-right-sm"></i>
+                  </a>
+                </div>
               </div>
-              <div className="blog-card-content">
-                <h3 className="blog-card-title">{blog.title}</h3>
-                <p className="blog-card-excerpt">{blog.excerpt}</p>
-                <a 
-                  href={`/blog/${blog.slug}`} 
-                  className="blog-read-more"
-                  onClick={(e) => handleReadMore(e, blog.slug)}
-                >
-                  Read More <i className="fa-solid fa-arrow-right icon-right-sm"></i>
-                </a>
-              </div>
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '40px 0', color: 'rgba(0,0,0,0.4)', fontSize: '0.9rem' }}>
+              No blogs uploaded yet.
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

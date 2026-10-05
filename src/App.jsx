@@ -6,7 +6,6 @@ import Projects from './components/Projects';
 import Process from './components/Process';
 import OurPartners from './components/OurPartners';
 import WhyChooseUs from './components/WhyChooseUs';
-import OurClients from './components/OurClients';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Blog from './components/Blog';
@@ -22,6 +21,10 @@ import BlogDetailPage from './components/BlogDetailPage';
 import NotificationPopup from './components/NotificationPopup';
 import InteriorDesign from './components/InteriorDesign';
 import InteriorPage from './components/InteriorPage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import TermsOfServicePage from './components/TermsOfServicePage';
+import DisclaimerPage from './components/DisclaimerPage';
+import SitemapPage from './components/SitemapPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -43,6 +46,14 @@ function App() {
         return 'blog';
       } else if (path.startsWith('/blog/')) {
         return 'blog-detail';
+      } else if (path === '/privacy-policy' || path === '/privacy-policy/') {
+        return 'privacy-policy';
+      } else if (path === '/terms-of-service' || path === '/terms-of-service/') {
+        return 'terms-of-service';
+      } else if (path === '/disclaimer' || path === '/disclaimer/') {
+        return 'disclaimer';
+      } else if (path === '/sitemap' || path === '/sitemap/') {
+        return 'sitemap';
       }
     }
     return 'home';
@@ -67,6 +78,14 @@ function App() {
         setCurrentPage('blog');
       } else if (path.startsWith('/blog/')) {
         setCurrentPage('blog-detail');
+      } else if (path === '/privacy-policy' || path === '/privacy-policy/') {
+        setCurrentPage('privacy-policy');
+      } else if (path === '/terms-of-service' || path === '/terms-of-service/') {
+        setCurrentPage('terms-of-service');
+      } else if (path === '/disclaimer' || path === '/disclaimer/') {
+        setCurrentPage('disclaimer');
+      } else if (path === '/sitemap' || path === '/sitemap/') {
+        setCurrentPage('sitemap');
       } else {
         setCurrentPage('home');
       }
@@ -80,6 +99,26 @@ function App() {
     const path = currentPage === 'home' ? '/' : `/${currentPage}`;
     if (window.location.pathname !== path) {
       window.history.pushState(null, '', path);
+    }
+
+    // Dynamic SEO Page Titles for search crawlers & browser tabs
+    const seoTitles = {
+      'home': 'InfraVision - Construction & Infrastructure Company in Lucknow | ITLC India Pvt Ltd',
+      'services': 'Civil Contracting & Turnkey Construction Services in Lucknow | InfraVision',
+      'projects': 'Infrastructure & Architecture Portfolio Projects | InfraVision Lucknow',
+      'interior': 'Luxury Architectural Interior Design Services | InfraVision',
+      'about': 'About Us - 10+ Years of Structural Construction Excellence | ITLC India',
+      'contact': 'Contact Us & Get Turnkey Construction Estimate | InfraVision Lucknow',
+      'blog': 'Construction Insights & Architectural Engineering Blog | InfraVision',
+      'sitemap': 'HTML Sitemap & Website Directory | InfraVision by ITLC India',
+      'privacy-policy': 'Privacy Policy | InfraVision by ITLC India Pvt Ltd',
+      'terms-of-service': 'Terms of Service | InfraVision by ITLC India Pvt Ltd',
+      'disclaimer': 'Legal Disclaimer Notice | InfraVision ITLC India',
+      'admin': 'Administrative Portal | InfraVision'
+    };
+
+    if (seoTitles[currentPage]) {
+      document.title = seoTitles[currentPage];
     }
   }, [currentPage]);
 
@@ -121,7 +160,6 @@ function App() {
             <InteriorDesign setCurrentPage={setCurrentPage} />
             <Process />
             <WhyChooseUs setCurrentPage={setCurrentPage} />
-            <OurClients />
             <Testimonials />
             <FAQ />
             <Blog setCurrentPage={setCurrentPage} />
@@ -166,6 +204,26 @@ function App() {
         {currentPage === 'blog-detail' && (
           <div className="animate-fade-in">
             <BlogDetailPage setCurrentPage={setCurrentPage} />
+          </div>
+        )}
+        {currentPage === 'privacy-policy' && (
+          <div className="animate-fade-in">
+            <PrivacyPolicyPage />
+          </div>
+        )}
+        {currentPage === 'terms-of-service' && (
+          <div className="animate-fade-in">
+            <TermsOfServicePage />
+          </div>
+        )}
+        {currentPage === 'disclaimer' && (
+          <div className="animate-fade-in">
+            <DisclaimerPage />
+          </div>
+        )}
+        {currentPage === 'sitemap' && (
+          <div className="animate-fade-in">
+            <SitemapPage setCurrentPage={setCurrentPage} />
           </div>
         )}
       </main>

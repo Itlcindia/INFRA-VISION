@@ -155,19 +155,15 @@ const Contact = ({ setCurrentPage }) => {
               </div>
             </div>
 
-            {/* Styled Map Embed Fallback */}
-            <div className="map-container">
-              <div className="map-placeholder">
-                <div className="map-bg-grid"></div>
-                <div className="map-marker-ping"></div>
-                <div className="map-card">
-                  <h6>INFRAVISION HEADQUARTERS</h6>
-                  <p>Golf City, Lucknow, UP</p>
-                  <a href="https://maps.google.com/?q=G1/0049,+Olive+Wood+Villa,+Golf+City,+Lucknow" target="_blank" rel="noopener noreferrer" className="map-link">
-                    Open in Google Maps <i className="fa-solid fa-up-right-from-square"></i>
-                  </a>
-                </div>
-              </div>
+            <div className="map-container" style={{ height: '300px', marginTop: '30px' }}>
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.9205002132694!2d81.00608417523145!3d26.77880397672734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd6390d37eb5%3A0x2c4ec91384029950!2sITLC%20INDIA%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1784021289957!5m2!1sen!2sin" 
+                style={{ border: 0, width: '100%', height: '100%', display: 'block' }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="ITLC India Pvt Ltd Google Maps Location"
+              ></iframe>
             </div>
 
           </div>
@@ -191,7 +187,7 @@ const Contact = ({ setCurrentPage }) => {
                       type="text"
                       id="name"
                       name="name"
-                      placeholder="John Doe"
+                      placeholder=""
                       value={formData.name}
                       onChange={handleInputChange}
                       onBlur={handleBlur}
@@ -211,7 +207,7 @@ const Contact = ({ setCurrentPage }) => {
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="john@example.com"
+                      placeholder=""
                       value={formData.email}
                       onChange={handleInputChange}
                       onBlur={handleBlur}

@@ -36,7 +36,16 @@ const BlogDetailPage = ({ setCurrentPage }) => {
         return res.json();
       })
       .then(data => {
-        setBlog(data);
+        if (Array.isArray(data)) {
+          const found = data.find(b => b.slug === slug);
+          if (found) {
+            setBlog(found);
+          } else {
+            throw new Error("Blog post not found.");
+          }
+        } else {
+          setBlog(data);
+        }
         setLoading(false);
       })
       .catch(err => {
@@ -136,9 +145,12 @@ const BlogDetailPage = ({ setCurrentPage }) => {
             </div>
 
             <div className="blog-detail-meta" style={{ display: 'flex', gap: '20px', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              <span><i className="fa-solid fa-user"></i> Author: <strong>{blog.author}</strong></span>
-              <span><i className="fa-regular fa-calendar"></i> Published: <strong>{new Date(blog.published_date).toLocaleDateString()}</strong></span>
-              <span><i className="fa-solid fa-tag"></i> {blog.category}</span>
+              <span><i className="fa-solid fa-user"></i> Author: <strong>{blog.author && blog.author.trim() !== '' ? blog.author : 'Admin'}</strong></span>
+              <span><i className="fa-regular fa-calendar"></i> Published: <strong>{(() => {
+                const d = new Date(blog.published_date);
+                return isNaN(d.getTime()) ? (blog.created_at ? new Date(blog.created_at).toLocaleDateString() : new Date().toLocaleDateString()) : d.toLocaleDateString();
+              })()}</strong></span>
+              <span><i className="fa-solid fa-tag"></i> {blog.category || 'General'}</span>
             </div>
 
             <h1 className="blog-detail-title" style={{ fontSize: '2rem', fontWeight: '900', color: '#fff', marginBottom: '20px', lineHeight: '1.2' }}>

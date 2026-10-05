@@ -1,44 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 const Projects = ({ setCurrentPage }) => {
-  const [projectsData, setProjectsData] = useState([
-    {
-      id: 1,
-      title: 'The Aurelia Villa',
-      description: 'A luxurious modern residential estate featuring high-concept geometric architecture and open light-filled spaces.',
-      image: 'assets/images/project1.jpg',
-      category: 'Residential',
-      location: 'Beverly Hills, CA',
-      year: '2025',
-      client: 'Private Owner'
-    },
-    {
-      id: 2,
-      title: 'Vertex Office Tower',
-      description: 'A pioneering commercial skyscraper incorporating sustainable green design elements and advanced structural steel systems.',
-      image: 'assets/images/project2.jpg',
-      category: 'Commercial',
-      location: 'Seattle, WA',
-      year: '2026',
-      client: 'Vertex Holdings'
-    },
-    {
-      id: 3,
-      title: 'Ironclad Warehouse Loft',
-      description: 'A modern industrial warehouse conversion preserving classic brick and iron elements while integrating high-end modern amenities.',
-      image: 'assets/images/project4.jpg',
-      category: 'Industrial',
-      location: 'Portland, OR',
-      year: '2024',
-      client: 'Ironclad Development'
-    }
-  ]);
+const [projectsData, setProjectsData] = useState([]);
 
   useEffect(() => {
     fetch('/api/projects.php')
       .then(res => res.json())
       .then(data => {
-        if (data && data.length > 0) {
+        if (Array.isArray(data)) {
           setProjectsData(data);
         }
       })
@@ -49,9 +18,21 @@ const Projects = ({ setCurrentPage }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
-  const currentProject = projectsData[currentIdx];
-  const nextIdx = (currentIdx + 1) % projectsData.length;
-  const nextProject = projectsData[nextIdx];
+  const currentProject = projectsData[currentIdx] || {
+    id: 0,
+    title: 'No Project Available',
+    description: 'Please upload projects from the Admin Panel to display them here.',
+    image: '',
+    category: 'General',
+    location: 'N/A',
+    year: 'N/A',
+    client: 'N/A'
+  };
+  const nextIdx = projectsData.length > 0 ? (currentIdx + 1) % projectsData.length : 0;
+  const nextProject = projectsData[nextIdx] || {
+    image: '',
+    title: ''
+  };
 
   const handleNextProject = () => {
     if (isAnimating) return;
@@ -90,7 +71,7 @@ const Projects = ({ setCurrentPage }) => {
           <div className="projects-image-column">
             <div className="featured-image-wrapper">
               <img 
-                src={currentProject.image} 
+                src={currentProject.image ? (currentProject.image.startsWith('http') || currentProject.image.startsWith('/') ? currentProject.image : '/' + currentProject.image) : ''} 
                 alt={currentProject.title} 
                 className={`featured-main-img ${isAnimating ? 'animating-img' : ''}`}
                 onClick={() => setIsDetailOpen(prev => !prev)}
@@ -106,7 +87,7 @@ const Projects = ({ setCurrentPage }) => {
 
               {/* Next Project Thumbnail Preview overlay */}
               <div className="next-thumbnail-overlay" onClick={handleNextProject}>
-                <img src={nextProject.image} alt={nextProject.title} className="next-thumbnail-img" />
+                <img src={nextProject.image ? (nextProject.image.startsWith('http') || nextProject.image.startsWith('/') ? nextProject.image : '/' + nextProject.image) : ''} alt={nextProject.title} className="next-thumbnail-img" />
                 <div className="thumb-hover-overlay">
                   <span>Next</span>
                 </div>
@@ -126,7 +107,7 @@ const Projects = ({ setCurrentPage }) => {
             </button>
             
             <div className={`project-counter ${isAnimating ? 'fade-out-text' : 'fade-in-text'}`}>
-              <span className="current-count">{String(currentProject.id).padStart(2, '0')}</span>
+              <span className="current-count">{String(currentIdx + 1).padStart(2, '0')}</span>
               <span className="total-count">/ {String(projectsData.length).padStart(2, '0')}</span>
             </div>
           </div>

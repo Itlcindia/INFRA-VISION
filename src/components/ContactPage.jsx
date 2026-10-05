@@ -142,60 +142,57 @@ const ContactPage = () => {
       </div>
 
       <div className="container pb-24">
-        <div className="section-grid grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+        <div className="section-grid grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10 items-start">
           
           {/* Details Column */}
           <div className="contact-info-col scroll-reveal active">
-            <h2 className="text-white font-extrabold text-2xl mb-4">Corporate Offices</h2>
-            <p className="text-white/70 text-sm leading-relaxed mb-8">
-              Reach out to our project estimating desk directly, or visit our design studio in Lucknow.
-            </p>
+            <div className="card form-card bg-white/3 border border-white/8 rounded-2xl p-6 md:p-8">
+              <h2 className="text-white font-extrabold text-2xl mb-4">Corporate Offices</h2>
+              <p className="text-white/70 text-sm leading-relaxed mb-8">
+                Reach out to our project estimating desk directly, or visit our design studio in Lucknow.
+              </p>
 
-            <div className="contact-details space-y-6">
-              <div className="contact-detail-item flex items-start gap-4">
-                <div className="detail-icon w-10 h-10 rounded-full bg-green-500/10 text-green-accent flex items-center justify-center flex-shrink-0 text-base">
-                  <i className="fa-solid fa-location-dot"></i>
+              <div className="contact-details space-y-6">
+                <div className="contact-detail-item flex items-start gap-4">
+                  <div className="detail-icon w-10 h-10 rounded-full bg-green-500/10 text-green-accent flex items-center justify-center flex-shrink-0 text-base">
+                    <i className="fa-solid fa-location-dot"></i>
+                  </div>
+                  <div className="detail-text">
+                    <h5 className="text-white font-bold text-sm m-0 mb-1">Corporate HQ</h5>
+                    <p className="text-xs text-white/60 m-0">G1/0049, Olive Wood Villa, Golf City, Lucknow, Uttar Pradesh – 226030</p>
+                  </div>
                 </div>
-                <div className="detail-text">
-                  <h5 className="text-white font-bold text-sm m-0 mb-1">Corporate HQ</h5>
-                  <p className="text-xs text-white/60 m-0">G1/0049, Olive Wood Villa, Golf City, Lucknow, Uttar Pradesh – 226030</p>
+
+                <div className="contact-detail-item flex items-start gap-4">
+                  <div className="detail-icon w-10 h-10 rounded-full bg-green-500/10 text-green-accent flex items-center justify-center flex-shrink-0 text-base">
+                    <i className="fa-solid fa-phone"></i>
+                  </div>
+                  <div className="detail-text">
+                    <h5 className="text-white font-bold text-sm m-0 mb-1">Call Estimating</h5>
+                    <p className="text-xs text-white/60 m-0">(+91) 953 234 1000</p>
+                  </div>
+                </div>
+
+                <div className="contact-detail-item flex items-start gap-4">
+                  <div className="detail-icon w-10 h-10 rounded-full bg-green-500/10 text-green-accent flex items-center justify-center flex-shrink-0 text-base">
+                    <i className="fa-solid fa-envelope"></i>
+                  </div>
+                  <div className="detail-text">
+                    <h5 className="text-white font-bold text-sm m-0 mb-1">Direct Emails</h5>
+                    <p className="text-xs text-white/60 m-0">info.itlcindia@gmail.com</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="contact-detail-item flex items-start gap-4">
-                <div className="detail-icon w-10 h-10 rounded-full bg-green-500/10 text-green-accent flex items-center justify-center flex-shrink-0 text-base">
-                  <i className="fa-solid fa-phone"></i>
-                </div>
-                <div className="detail-text">
-                  <h5 className="text-white font-bold text-sm m-0 mb-1">Call Estimating</h5>
-                  <p className="text-xs text-white/60 m-0">(+91) 953 234 1000</p>
-                </div>
-              </div>
-
-              <div className="contact-detail-item flex items-start gap-4">
-                <div className="detail-icon w-10 h-10 rounded-full bg-green-500/10 text-green-accent flex items-center justify-center flex-shrink-0 text-base">
-                  <i className="fa-solid fa-envelope"></i>
-                </div>
-                <div className="detail-text">
-                  <h5 className="text-white font-bold text-sm m-0 mb-1">Direct Emails</h5>
-                  <p className="text-xs text-white/60 m-0">info.itlcindia@gmail.com</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Map Frame wrapper */}
-            <div className="map-container mt-8 h-48 rounded-xl overflow-hidden relative border border-white/10">
-              <div className="map-placeholder h-full w-full bg-secondary flex items-center justify-center relative">
-                <div className="map-bg-grid absolute inset-0 opacity-20"></div>
-                <div className="map-marker-ping absolute w-4 h-4 bg-green-accent rounded-full animate-ping"></div>
-                <div className="map-marker absolute w-3 h-3 bg-green-accent rounded-full border-2 border-secondary"></div>
-                <div className="map-card absolute bottom-4 left-4 right-4 bg-secondary/90 border border-white/8 rounded-xl p-3 text-xs text-center backdrop-blur-md">
-                  <h6 className="text-white font-bold m-0 mb-1">INFRAVISION HEADQUARTERS</h6>
-                  <p className="text-white/60 m-0 mb-2">Golf City, Lucknow, UP</p>
-                  <a href="https://maps.google.com/?q=G1/0049,+Olive+Wood+Villa,+Golf+City,+Lucknow" target="_blank" rel="noopener noreferrer" className="text-green-accent hover:text-white font-bold tracking-wider uppercase text-[9px] flex items-center justify-center gap-1">
-                    Google Maps Link <i className="fa-solid fa-up-right-from-square"></i>
-                  </a>
-                </div>
+              <div className="map-container mt-8 rounded-xl overflow-hidden relative border border-white/10" style={{ height: '300px' }}>
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.9205002132694!2d81.00608417523145!3d26.77880397672734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd6390d37eb5%3A0x2c4ec91384029950!2sITLC%20INDIA%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1784021289957!5m2!1sen!2sin" 
+                  style={{ border: 0, width: '100%', height: '100%', display: 'block' }} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  title="ITLC India Pvt Ltd Google Maps Location"
+                ></iframe>
               </div>
             </div>
           </div>
@@ -209,27 +206,27 @@ const ContactPage = () => {
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 <div className="form-group">
                   <label className="block text-white/80 text-xs font-bold mb-2">Your Full Name</label>
-                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-2">
-                    <i className="fa-regular fa-user text-white/30"></i>
-                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} onBlur={handleBlur} placeholder="John Doe" className="bg-transparent text-white text-xs w-full outline-none" required />
+                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl" style={{ display: 'flex', alignItems: 'center', padding: '20px 24px', width: '100%', boxSizing: 'border-box' }}>
+                    <i className="fa-regular fa-user text-white/30" style={{ fontSize: '1.1rem', marginRight: '16px', flexShrink: 0 }}></i>
+                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} onBlur={handleBlur} placeholder="" className="bg-transparent text-white text-xs w-full outline-none" style={{ background: 'transparent', border: 'none', outline: 'none', color: '#FFF', fontSize: '0.85rem', width: '100%', padding: 0 }} required />
                   </div>
                   {errors.name && <span className="text-red-500 text-[10px] mt-1 block">{errors.name}</span>}
                 </div>
 
                 <div className="form-group">
                   <label className="block text-white/80 text-xs font-bold mb-2">Email Address</label>
-                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-2">
-                    <i className="fa-regular fa-envelope text-white/30"></i>
-                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} onBlur={handleBlur} placeholder="john@example.com" className="bg-transparent text-white text-xs w-full outline-none" required />
+                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl" style={{ display: 'flex', alignItems: 'center', padding: '20px 24px', width: '100%', boxSizing: 'border-box' }}>
+                    <i className="fa-regular fa-envelope text-white/30" style={{ fontSize: '1.1rem', marginRight: '16px', flexShrink: 0 }}></i>
+                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} onBlur={handleBlur} placeholder="" className="bg-transparent text-white text-xs w-full outline-none" style={{ background: 'transparent', border: 'none', outline: 'none', color: '#FFF', fontSize: '0.85rem', width: '100%', padding: 0 }} required />
                   </div>
                   {errors.email && <span className="text-red-500 text-[10px] mt-1 block">{errors.email}</span>}
                 </div>
 
                 <div className="form-group">
                   <label className="block text-white/80 text-xs font-bold mb-2">Interest Category</label>
-                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-2">
-                    <i className="fa-solid fa-sliders text-white/30"></i>
-                    <select name="service" value={formData.service} onChange={handleInputChange} className="bg-transparent text-white text-xs w-full outline-none border-none">
+                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl" style={{ display: 'flex', alignItems: 'center', padding: '20px 24px', width: '100%', boxSizing: 'border-box' }}>
+                    <i className="fa-solid fa-sliders text-white/30" style={{ fontSize: '1.1rem', marginRight: '16px', flexShrink: 0 }}></i>
+                    <select name="service" value={formData.service} onChange={handleInputChange} className="bg-transparent text-white text-xs w-full outline-none border-none" style={{ background: 'transparent', border: 'none', outline: 'none', color: '#FFF', fontSize: '0.85rem', width: '100%', padding: 0 }}>
                       <option value="residential" className="bg-secondary text-white">Residential Custom Build</option>
                       <option value="commercial" className="bg-secondary text-white">Commercial Development</option>
                       <option value="planning" className="bg-secondary text-white">Space & Building Planning</option>
@@ -240,9 +237,9 @@ const ContactPage = () => {
 
                 <div className="form-group">
                   <label className="block text-white/80 text-xs font-bold mb-2">Project Brief Description</label>
-                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-start gap-2">
-                    <i className="fa-regular fa-comment-dots text-white/30 mt-1"></i>
-                    <textarea name="message" value={formData.message} onChange={handleInputChange} onBlur={handleBlur} rows={4} placeholder="Size, target location, eco requirements..." className="bg-transparent text-white text-xs w-full outline-none resize-none" required></textarea>
+                  <div className="input-wrapper bg-white/5 border border-white/10 rounded-xl" style={{ display: 'flex', alignItems: 'flex-start', padding: '20px 24px', width: '100%', boxSizing: 'border-box' }}>
+                    <i className="fa-regular fa-comment-dots text-white/30" style={{ fontSize: '1.1rem', marginRight: '16px', marginTop: '4px', flexShrink: 0 }}></i>
+                    <textarea name="message" value={formData.message} onChange={handleInputChange} onBlur={handleBlur} rows={4} placeholder="Size, target location, eco requirements..." className="bg-transparent text-white text-xs w-full outline-none resize-none" style={{ background: 'transparent', border: 'none', outline: 'none', color: '#FFF', fontSize: '0.85rem', width: '100%', padding: 0, resize: 'none' }} required></textarea>
                   </div>
                   {errors.message && <span className="text-red-500 text-[10px] mt-1 block">{errors.message}</span>}
                 </div>

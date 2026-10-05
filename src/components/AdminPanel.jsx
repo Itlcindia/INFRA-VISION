@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 const ProposalsChart = ({ inquiries, theme }) => {
   const [hoveredPoint, setHoveredPoint] = useState(null);
@@ -399,7 +400,6 @@ const AdminPanel = ({ setCurrentPage }) => {
   const [services, setServices] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [blogs, setBlogs] = useState([]);
-  const [clients, setClients] = useState([]);
   const [partners, setPartners] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
@@ -668,13 +668,7 @@ const AdminPanel = ({ setCurrentPage }) => {
       })
       .catch(err => console.error("Error loading testimonials:", err));
 
-    // 6a. Fetch Clients
-    fetch('/api/clients.php')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setClients(data);
-      })
-      .catch(err => console.error("Error loading clients:", err));
+
 
     // 6b. Fetch Partners
     fetch('/api/partners.php')
@@ -1307,75 +1301,7 @@ const AdminPanel = ({ setCurrentPage }) => {
       .catch(err => console.error(err));
   };
 
-  // Clients CRUD Handlers
-  const [isClientModalOpen, setIsClientModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [clientSearch, setClientSearch] = useState('');
-  const [clientFormData, setClientFormData] = useState({
-    name: '',
-    image: 'fa-user'
-  });
 
-  const openClientModal = (client = null) => {
-    if (client) {
-      setSelectedClient(client);
-      setClientFormData({
-        id: client.id,
-        name: client.name,
-        image: client.image
-      });
-    } else {
-      setSelectedClient(null);
-      setClientFormData({
-        name: '',
-        image: 'fa-user'
-      });
-    }
-    setIsClientModalOpen(true);
-  };
-
-  const handleSaveClientSubmit = (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('vite_admin_token');
-
-    fetch('/api/clients.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(clientFormData)
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setActionSuccess(selectedClient ? "Client updated successfully!" : "New client added successfully!");
-          setTimeout(() => setActionSuccess(''), 4000);
-          setIsClientModalOpen(false);
-          loadDashboardData();
-        }
-      })
-      .catch(err => console.error(err));
-  };
-
-  const handleDeleteClient = (id) => {
-    if (!window.confirm("Are you sure you want to delete this client?")) return;
-    const token = localStorage.getItem('vite_admin_token');
-
-    fetch(`/api/clients.php?id=${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setActionSuccess("Client removed!");
-          setTimeout(() => setActionSuccess(''), 4000);
-          setClients(prev => prev.filter(c => c.id !== id));
-        }
-      })
-      .catch(err => console.error(err));
-  };
 
   // Partners CRUD Handlers
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
@@ -1768,9 +1694,7 @@ const AdminPanel = ({ setCurrentPage }) => {
     admin.role.toLowerCase().includes(subAdminSearch.toLowerCase())
   );
 
-  const filteredClientsList = clients.filter(c =>
-    c.name.toLowerCase().includes(clientSearch.toLowerCase())
-  );
+
 
   const filteredPartnersList = partners.filter(p =>
     p.name.toLowerCase().includes(partnerSearch.toLowerCase())
@@ -2091,11 +2015,7 @@ const AdminPanel = ({ setCurrentPage }) => {
                   <i className="fa-solid fa-handshake"></i> Our Partners ({partners.length})
                 </button>
               </li>
-              <li>
-                <button className={`dashboard-menu-btn ${activeTab === 'clients' ? 'active' : ''}`} onClick={() => setActiveTab('clients')}>
-                  <i className="fa-solid fa-people-group"></i> Our Clients ({clients.length})
-                </button>
-              </li>
+
               <li>
                 <button className={`dashboard-menu-btn ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')}>
                   <i className="fa-solid fa-bullhorn"></i> Notifications ({notifications.length})
@@ -2775,9 +2695,9 @@ const AdminPanel = ({ setCurrentPage }) => {
                             </tr>
                           </thead>
                           <tbody>
-                            {filteredPartnersList.map(p => (
+                            {filteredPartnersList.map((p, index) => (
                               <tr key={p.id}>
-                                <td style={{ fontWeight: 'bold', color: 'var(--clr-primary)' }}>#{p.id}</td>
+                                <td style={{ fontWeight: 'bold', color: 'var(--clr-primary)' }}>#{index + 1}</td>
                                 <td>
                                   <div style={{ width: '54px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF', overflow: 'hidden', padding: '2px' }}>
                                     {isFontAwesome(p.image) ? (
@@ -2811,85 +2731,7 @@ const AdminPanel = ({ setCurrentPage }) => {
                   </div>
                 )}
 
-                {/* 9. CLIENTS TAB */}
-                {activeTab === 'clients' && (
-                  <div className="dashboard-section-card animate-fade-in">
-                    <div className="section-card-header">
-                      <div className="section-card-info">
-                        <h3 className="section-card-title">Our Clients</h3>
-                        <p className="section-card-desc">Manage customer rosters and enterprises showcased on the Home page.</p>
-                      </div>
-                      <button className="btn-add-new" onClick={() => openClientModal()}>
-                        <i className="fa-solid fa-plus"></i> Add Client
-                      </button>
-                    </div>
 
-                    <div className="db-search-bar">
-                      <div className="db-search-input-box" style={{ width: '100%' }}>
-                        <i className="fa-solid fa-magnifying-glass"></i>
-                        <input 
-                          type="text" 
-                          placeholder="Search clients by name..." 
-                          value={clientSearch} 
-                          onChange={(e) => setClientSearch(e.target.value)} 
-                        />
-                      </div>
-                    </div>
-
-                    {filteredClientsList.length === 0 ? (
-                      <div className="text-center" style={{ padding: '40px', color: 'rgba(255,255,255,0.4)' }}>
-                        No clients found matching the query.
-                      </div>
-                    ) : (
-                      <div className="admin-table-wrapper">
-                        <table className="admin-db-table">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Logo Icon</th>
-                              <th>Client Name</th>
-                              <th style={{ textAlign: 'right' }}>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {filteredClientsList.map((c) => (
-                              <tr 
-                                key={c.id} 
-                                style={{ 
-                                  borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
-                                }}
-                              >
-                                <td style={{ fontWeight: 'bold', color: 'var(--clr-primary)' }}>#{c.id}</td>
-                                <td>
-                                  <div className="client-image-circle" style={{ width: '48px', height: '48px', borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255, 255, 255, 0.1)', flexShrink: 0 }}>
-                                    {c.image && (
-                                      <img 
-                                        src={getImgSrc(c.image)} 
-                                        alt={c.name} 
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                      />
-                                    )}
-                                  </div>
-                                </td>
-                                <td style={{ fontWeight: 'bold' }}>{c.name}</td>
-                                <td>
-                                  <div className="action-btn-group">
-                                    <button className="action-btn edit" onClick={() => openClientModal(c)}>
-                                      <i className="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button className="action-btn delete" onClick={() => handleDeleteClient(c.id)}>
-                                      <i className="fa-regular fa-trash-can"></i>
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                )}
 
                 {activeTab === 'notifications' && (
                   <div className="dashboard-section-card animate-fade-in">
@@ -4149,51 +3991,7 @@ const AdminPanel = ({ setCurrentPage }) => {
         </div>
       )}
 
-      {/* G. CLIENT MODAL */}
-      {isClientModalOpen && (
-        <div className="query-modal-overlay" onClick={() => setIsClientModalOpen(false)}>
-          <div className="query-modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px' }}>
-            <button className="query-close-btn" onClick={() => setIsClientModalOpen(false)}>
-              <i className="fa-solid fa-xmark"></i>
-            </button>
-            <div className="spec-modal-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '15px', marginBottom: '15px' }}>
-              <span className="text-xs font-bold text-highlight-mint uppercase tracking-widest block mb-1">Our Client</span>
-              <h3>{selectedClient ? 'Edit Client Details' : 'Add New Client'}</h3>
-            </div>
-            <form onSubmit={handleSaveClientSubmit} className="spec-modal-body" style={{ textAlign: 'left' }}>
-              <div className="admin-form-group" style={{ marginBottom: '12px' }}>
-                <label className="admin-form-label">Client Name</label>
-                <input
-                  type="text"
-                  value={clientFormData.name}
-                  onChange={(e) => setClientFormData({ ...clientFormData, name: e.target.value })}
-                  className="admin-form-input-small"
-                  placeholder="e.g. Marcus Vance"
-                  required
-                />
-              </div>
 
-              <div className="admin-form-group" style={{ marginBottom: '15px' }}>
-                <label className="admin-form-label">Client Logo / Photo</label>
-                <ImageUploadField
-                  value={clientFormData.image}
-                  section="clients"
-                  onChange={(path) => setClientFormData({ ...clientFormData, image: path })}
-                />
-              </div>
-
-              <div style={{ display: 'flex', gap: '15px', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '15px' }}>
-                <button type="button" className="btn w-full btn-action-cancel" onClick={() => setIsClientModalOpen(false)} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', padding: '10px 0', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.78rem' }}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary w-full">
-                  {selectedClient ? 'Save Changes' : 'Add Client'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* H. PARTNER MODAL */}
       {isPartnerModalOpen && (
@@ -4308,15 +4106,50 @@ const AdminPanel = ({ setCurrentPage }) => {
         </div>
       )}
 
-      {isSubAdminModalOpen && (
-        <div className="query-modal-overlay" onClick={() => setIsSubAdminModalOpen(false)}>
-          <div className="query-modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px' }}>
+      {isSubAdminModalOpen && createPortal(
+        <div 
+          className="query-modal-overlay" 
+          onClick={() => setIsSubAdminModalOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(15, 23, 42, 0.8)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2200,
+            overflow: 'hidden',
+            padding: '20px'
+          }}
+        >
+          <div 
+            className="query-modal-card" 
+            onClick={(e) => e.stopPropagation()} 
+            style={{ 
+              maxWidth: '480px', 
+              width: '90%', 
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              margin: 0,
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#ffffff',
+              color: '#0f172a',
+              border: '1px solid #cbd5e1',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.3)'
+            }}
+          >
             <button className="query-close-btn" onClick={() => setIsSubAdminModalOpen(false)}>
               <i className="fa-solid fa-xmark"></i>
             </button>
-            <div className="spec-modal-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '15px', marginBottom: '15px' }}>
+            <div className="spec-modal-header" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', paddingBottom: '15px', marginBottom: '15px' }}>
               <span className="text-xs font-bold text-highlight-mint uppercase tracking-widest block mb-1">Admin Profile</span>
-              <h3>{selectedSubAdmin ? 'Edit Admin Details' : 'Add New Admin'}</h3>
+              <h3 style={{ color: '#0f172a' }}>{selectedSubAdmin ? 'Edit Admin Details' : 'Add Sub-Admin'}</h3>
             </div>
             <form onSubmit={handleSaveSubAdminSubmit} className="spec-modal-body" style={{ textAlign: 'left' }}>
               <div className="admin-form-group" style={{ marginBottom: '12px' }}>
@@ -4358,7 +4191,7 @@ const AdminPanel = ({ setCurrentPage }) => {
                   value={subAdminFormData.role}
                   onChange={(e) => setSubAdminFormData(prev => ({ ...prev, role: e.target.value }))}
                   className="admin-form-input-small"
-                  style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
+                  style={{ background: '#f8fafc', border: '1px solid #cbd5e1', color: '#0f172a' }}
                 >
                   <option value="Super Admin">Super Admin (Full access + manage admins)</option>
                   <option value="Editor">Editor (Add/Edit/Delete content)</option>
@@ -4366,8 +4199,8 @@ const AdminPanel = ({ setCurrentPage }) => {
                 </select>
               </div>
 
-              <div style={{ display: 'flex', gap: '15px', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '15px' }}>
-                <button type="button" className="btn w-full btn-action-cancel" onClick={() => setIsSubAdminModalOpen(false)} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', padding: '10px 0', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.78rem' }}>
+              <div style={{ display: 'flex', gap: '15px', marginTop: '20px', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '15px' }}>
+                <button type="button" className="btn w-full btn-action-cancel" onClick={() => setIsSubAdminModalOpen(false)} style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.1)', color: 'rgba(0,0,0,0.7)', padding: '10px 0', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.78rem' }}>
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary w-full">
@@ -4376,7 +4209,8 @@ const AdminPanel = ({ setCurrentPage }) => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

@@ -23,7 +23,7 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [react()],
     build: {
-      outDir: 'build'
+      outDir: 'dist'
     },
     server: {
       proxy: {

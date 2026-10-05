@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import heroVideo from '../assets/video_scroll.mp4';
+import heroPoster from '../assets/video_poster.jpg';
 
 const Hero = () => {
   const [activeStage, setActiveStage] = useState(0);
@@ -230,14 +231,15 @@ const Hero = () => {
           <video
             ref={videoRef}
             src={heroVideo}
+            poster={heroPoster}
             muted
             loop
             playsInline
             className="hero-bg-video"
-            style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 0.5s ease' }}
+            style={{ opacity: 1 }}
           />
           {!videoReady && (
-            <div className="video-loading-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', background: '#090d16' }}>
+            <div className="video-loading-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', background: 'rgba(9, 13, 22, 0.5)', backdropFilter: 'blur(4px)' }}>
               <i className="fa-solid fa-spinner fa-spin" style={{ color: 'var(--clr-primary)', fontSize: '1.5rem' }}></i>
             </div>
           )}

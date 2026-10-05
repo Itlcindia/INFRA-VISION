@@ -4153,7 +4153,7 @@ input, select, textarea, button {
   min-height: 100vh;
   background-color: var(--clr-secondary);
   color: var(--clr-white);
-  padding-top: 120px;
+  padding-top: 45px;
   overflow: hidden;
   z-index: 2;
 }
@@ -4170,7 +4170,7 @@ input, select, textarea, button {
 
 .services-page-header {
   position: relative;
-  padding: 60px 0 40px 0;
+  padding: 20px 0 25px 0;
   z-index: 3;
 }
 
@@ -5487,11 +5487,19 @@ input, select, textarea, button {
 .project-card-meta {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   font-size: 0.62rem;
   color: rgba(255, 255, 255, 0.35);
   margin-top: 5px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 8px;
+}
+
+.project-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .project-card-actions {
@@ -6162,9 +6170,8 @@ input, select, textarea, button {
 .partners-section,
 .featured-projects-section,
 .process-section,
-.clients-section,
-.modern-faq-section,
-.contact-section,
+.testimonials-section,
+.blog-section,
 .footer-section {
   color: #FFFFFF !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
@@ -6173,9 +6180,8 @@ input, select, textarea, button {
 .partners-section h1, .partners-section h2, .partners-section h3, .partners-section p,
 .featured-projects-section h1, .featured-projects-section h2, .featured-projects-section h3, .featured-projects-section p,
 .process-section h1, .process-section h2, .process-section h3, .process-section p,
-.clients-section h1, .clients-section h2, .clients-section h3, .clients-section p,
-.modern-faq-section h1, .modern-faq-section h2, .modern-faq-section h3, .modern-faq-section p,
-.contact-section h1, .contact-section h2, .contact-section h3, .contact-section p,
+.testimonials-section h1, .testimonials-section h2, .testimonials-section h3, .testimonials-section p,
+.blog-section h1, .blog-section h2, .blog-section h3, .blog-section p,
 .footer-section h1, .footer-section h2, .footer-section h3, .footer-section h4, .footer-section p {
   color: #FFFFFF !important;
 }
@@ -6184,9 +6190,8 @@ input, select, textarea, button {
 .featured-projects-section .project-card, .featured-projects-section .featured-image-wrapper,
 .partners-section .partner-card,
 .process-section .process-content-container,
-.clients-section .client-card,
-.modern-faq-section .faq-card, .modern-faq-section .faq-item,
-.contact-section .contact-card {
+.testimonials-section .testimonial-review-card,
+.blog-section .blog-card {
   background: rgba(255, 255, 255, 0.03) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   color: #FFFFFF !important;
@@ -6195,14 +6200,13 @@ input, select, textarea, button {
 /* Glow 1: U-shaped Normal Radial Glow (Lighter/brighter tone at top center) */
 .partners-section,
 .process-section,
-.modern-faq-section {
+.blog-section {
   background: radial-gradient(circle at 50% 0%, #1c2666 0%, #0A0E27 70%) !important;
 }
 
 /* Glow 2: Inverted U-shaped Radial Glow (Lighter/brighter tone at bottom center) */
 .featured-projects-section,
-.clients-section,
-.contact-section,
+.testimonials-section,
 .footer-section {
   background: radial-gradient(circle at 50% 100%, #1c2666 0%, #0A0E27 70%) !important;
 }
@@ -6211,8 +6215,8 @@ input, select, textarea, button {
 .premium-services-section,
 .interior-showcase-section,
 .why-choose-us-section,
-.testimonials-section,
-.blog-section {
+.modern-faq-section,
+.contact-section {
   background: #FFFFFF !important;
   color: #0F172A !important;
   border-color: #E2E8F0 !important;
@@ -6221,18 +6225,18 @@ input, select, textarea, button {
 .premium-services-section h1, .premium-services-section h2, .premium-services-section h3, .premium-services-section p,
 .interior-showcase-section h1, .interior-showcase-section h2, .interior-showcase-section h3, .interior-showcase-section p,
 .why-choose-us-section h1, .why-choose-us-section h2, .why-choose-us-section h3, .why-choose-us-section p,
-.testimonials-section h1, .testimonials-section h2, .testimonials-section h3, .testimonials-section p,
-.blog-section h1, .blog-section h2, .blog-section h3, .blog-section p {
+.modern-faq-section h1, .modern-faq-section h2, .modern-faq-section h3, .modern-faq-section p,
+.contact-section h1, .contact-section h2, .contact-section h3, .contact-section p {
   color: #0F172A !important;
 }
 
 /* Description / sub-text overrides in white sections to keep contrast high */
-.premium-service-desc, .process-desc, .feature-desc, .testimonial-desc, .blog-desc {
+.premium-service-desc, .process-desc, .feature-desc, .faq-description, .contact-desc {
   color: #475569 !important;
 }
 
 /* Card overrides in white sections */
-.premium-service-card, .process-step-card, .why-feature-card, .testimonial-review-card, .blog-card {
+.premium-service-card, .process-step-card, .why-feature-card, .faq-card, .faq-item, .contact-card {
   background: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
   color: #0F172A !important;
@@ -6293,26 +6297,8 @@ input, select, textarea, button {
   padding-top: 140px !important;
 }
 
-/* 6. WhyChooseUs (White) -> OurClients (Dark Blue) */
-.clients-section {
-  clip-path: polygon(0 80px, 100% 0, 100% calc(100% - 80px), 0 100%) !important;
-  position: relative !important;
-  z-index: 2 !important;
-  margin-top: -80px !important;
-  padding-top: 140px !important;
-  padding-bottom: 140px !important;
-}
-
-/* 7. OurClients (Dark Blue) -> Testimonials (White) */
+/* 6. WhyChooseUs (White) -> Testimonials (Dark Blue) */
 .testimonials-section {
-  margin-top: -80px !important;
-  position: relative !important;
-  z-index: 1 !important;
-  padding-top: 140px !important;
-}
-
-/* 8. Testimonials (White) -> FAQ (Dark Blue) */
-.modern-faq-section {
   clip-path: polygon(0 80px, 100% 0, 100% calc(100% - 80px), 0 100%) !important;
   position: relative !important;
   z-index: 2 !important;
@@ -6321,8 +6307,8 @@ input, select, textarea, button {
   padding-bottom: 140px !important;
 }
 
-/* 9. FAQ (Dark Blue) -> Blog (White) */
-.blog-section {
+/* 7. Testimonials (Dark Blue) -> FAQ (White) */
+.modern-faq-section {
   margin-top: -80px !important;
   position: relative !important;
   z-index: 1 !important;
@@ -6330,22 +6316,32 @@ input, select, textarea, button {
   padding-bottom: 140px !important;
 }
 
-/* 10. Blog (White) -> Contact (Dark Blue) */
+/* 8. FAQ (White) -> Blog (Dark Blue) */
+.blog-section {
+  clip-path: polygon(0 80px, 100% 0, 100% calc(100% - 80px), 0 100%) !important;
+  position: relative !important;
+  z-index: 2 !important;
+  margin-top: -80px !important;
+  padding-top: 140px !important;
+  padding-bottom: 140px !important;
+}
+
+/* 9. Blog (Dark Blue) -> Contact (White) */
 .contact-section {
+  margin-top: -80px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  padding-top: 140px !important;
+  padding-bottom: 140px !important;
+}
+
+/* 10. Contact (White) -> Footer (Dark Blue) */
+.footer-section {
   clip-path: polygon(0 80px, 100% 0, 100% 100%, 0 100%) !important;
   position: relative !important;
   z-index: 2 !important;
   margin-top: -80px !important;
   padding-top: 160px !important;
-  padding-bottom: 160px !important;
-}
-
-/* 11. Contact (Dark Blue) -> Footer (Dark Blue) */
-.footer-section {
-  margin-top: -80px !important;
-  position: relative !important;
-  z-index: 1 !important;
-  padding-top: 140px !important;
 }
 
 /* Adjust project showcase elements for maximum readability in dark mode */
@@ -6386,8 +6382,8 @@ input, select, textarea, button {
 
 .premium-services-section h1, .premium-services-section h2, .premium-services-section h3, .premium-services-section .section-title, .premium-services-section .section-heading,
 .why-choose-us-section h1, .why-choose-us-section h2, .why-choose-us-section h3, .why-choose-us-section .section-title, .why-choose-us-section .section-heading,
-.testimonials-section h1, .testimonials-section h2, .testimonials-section h3, .testimonials-section .section-title, .testimonials-section .section-heading,
-.blog-section h1, .blog-section h2, .blog-section h3, .blog-section .section-title, .blog-section .section-heading,
+.modern-faq-section h1, .modern-faq-section h2, .modern-faq-section h3, .modern-faq-section .faq-heading, .modern-faq-section .faq-heading-accent,
+.contact-section h1, .contact-section h2, .contact-section h3, .contact-section .section-title, .contact-section .section-heading,
 .services-page h1, .services-page h2, .services-page h3, .services-page .section-title, .services-page .section-heading,
 .projects-page h1, .projects-page h2, .projects-page h3, .projects-page .section-title, .projects-page .section-heading,
 .about-page h1, .about-page h2, .about-page h3, .about-page .section-title, .about-page .section-heading,
@@ -6396,11 +6392,72 @@ input, select, textarea, button {
 .premium-services-section .premium-services-title,
 .premium-services-section .premium-service-number,
 .why-choose-us-section .section-tag,
-.testimonials-section .section-tag,
-.testimonials-section .section-subtitle,
-.blog-section .section-tag,
-.blog-section .section-subtitle {
+.modern-faq-section .faq-card-question,
+.contact-section .section-tag,
+.contact-section .contact-detail-item h5,
+.contact-section .form-card h3 {
   color: #3D5EE1 !important;
+}
+
+/* All body/paragraph and label text in white background sections to Dark Black */
+.premium-services-section p, .premium-services-section .premium-service-desc,
+.why-choose-us-section p, .why-choose-us-section .feature-desc, .why-choose-us-section .why-feature-desc,
+.modern-faq-section p, .modern-faq-section .faq-description, .modern-faq-section .faq-card-body p, .modern-faq-section .faq-card-body,
+.contact-section p, .contact-section .contact-intro, .contact-section .contact-detail-item p, .contact-section .detail-text p,
+.contact-section .form-subtext, .contact-section label,
+.services-page p, .projects-page p, .about-page p, .blog-page p {
+  color: #0F172A !important;
+}
+
+/* Card overrides and visible borders in white sections */
+.modern-faq-section .faq-card-item,
+.contact-section .form-card {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+}
+
+.modern-faq-section .faq-card-item.expanded,
+.modern-faq-section .faq-card-item:hover {
+  border-color: #3D5EE1 !important;
+  box-shadow: 0 4px 12px rgba(61, 94, 225, 0.1) !important;
+}
+
+/* Contact Form Inputs & Placeholders on White Background */
+.contact-section .input-wrapper {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+}
+
+.contact-section .input-wrapper:focus-within {
+  border-color: #3D5EE1 !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 0 0 3px rgba(61, 94, 225, 0.15) !important;
+}
+
+.contact-section .input-wrapper input,
+.contact-section .input-wrapper select,
+.contact-section .input-wrapper textarea {
+  background: transparent !important;
+  border: none !important;
+  color: #0F172A !important;
+  outline: none !important;
+}
+
+.contact-section .input-wrapper input:focus,
+.contact-section .input-wrapper textarea:focus,
+.contact-section .input-wrapper select:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+.contact-section input::placeholder,
+.contact-section textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+.contact-section .input-icon {
+  color: #64748b !important;
 }
 
 /* Also ensure step navigation buttons or tab items inside the white Process section have dark/blue text instead of white */
@@ -6416,6 +6473,45 @@ input, select, textarea, button {
 .process-section .step-nav-btn.active {
   background-color: #3D5EE1 !important;
   color: #FFFFFF !important; /* active tab stays white text on blue background */
+}
+
+/* --- BLUE BACKGROUND SECTIONS TEXT VISIBILITY & CONTRAST OVERRIDES --- */
+.testimonials-section h1, .testimonials-section h2, .testimonials-section h3, .testimonials-section .section-title, .testimonials-section .section-heading,
+.blog-section h1, .blog-section h2, .blog-section h3, .blog-section .section-title, .blog-section .section-heading {
+  color: #FFFFFF !important;
+}
+
+.testimonials-section .section-subtitle,
+.blog-section .section-subtitle {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Card overrides in Blue Sections (dark semi-transparent cards with blue/white borders) */
+.testimonials-section .scrolling-review-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1.5px solid #3D5EE1 !important;
+}
+
+.testimonials-section .scrolling-name {
+  color: #FFFFFF !important;
+}
+
+.testimonials-section .scrolling-text {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.blog-section .blog-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+.blog-section .blog-card-title {
+  color: #FFFFFF !important;
+}
+
+.blog-section .blog-card-excerpt {
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 /* --- APN SOLAR AUTHORIZED PARTNERSHIP SECTION VISIBILITY RESOLUTION --- */
@@ -6458,7 +6554,7 @@ input, select, textarea, button {
   background: transparent !important;
   border-bottom: none !important;
   margin-top: 0 !important;
-  padding-top: 100px !important;
+  padding-top: 35px !important;
 }
 
 /* Adjust heading and general text contrast on solid light navy background */
@@ -6497,7 +6593,6 @@ input, select, textarea, button {
 /* Glassmorphism card styles on flat navy background */
 .services-page-wrapper .services-page-card,
 .services-page-wrapper .card-content-panel,
-.services-page-wrapper .contact-info-col,
 .services-page-wrapper .contact-card,
 .services-page-wrapper .highlight-right-card,
 .services-page-wrapper .about-card,
@@ -6513,6 +6608,16 @@ input, select, textarea, button {
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #FFFFFF !important;
+}
+
+.services-page-wrapper .input-wrapper input,
+.services-page-wrapper .input-wrapper textarea,
+.services-page-wrapper .input-wrapper select {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important; /* Reset padding since wrapper has padding */
 }
 
 .services-page-wrapper input::placeholder,
@@ -6619,8 +6724,8 @@ input, select, textarea, button {
 .partners-section p, .partners-section .section-subtitle,
 .featured-projects-section p, .featured-projects-section .section-subtitle, .featured-projects-section .project-showcase-desc,
 .clients-section p, .clients-section .section-subtitle,
-.modern-faq-section p, .modern-faq-section .faq-description,
-.contact-section p, .contact-section .contact-intro,
+.testimonials-section p, .testimonials-section .section-subtitle,
+.blog-section p, .blog-section .section-subtitle, .blog-section .blog-desc,
 .footer-section p,
 .services-page-wrapper p, 
 .services-page-wrapper .services-page-subtitle, 
@@ -6634,8 +6739,8 @@ input, select, textarea, button {
 .premium-services-section p, .premium-services-section .section-subtitle, .premium-services-section .premium-service-desc,
 .process-section p, .process-section .section-subtitle, .process-section .process-desc,
 .why-choose-us-section p, .why-choose-us-section .section-subtitle, .why-choose-us-section .partner-desc, .why-choose-us-section .feature-desc,
-.testimonials-section p, .testimonials-section .section-subtitle,
-.blog-section p, .blog-section .section-subtitle, .blog-section .blog-desc {
+.modern-faq-section p, .modern-faq-section .faq-description,
+.contact-section p, .contact-section .contact-intro {
   color: #333333 !important;
 }
 /* --- WHY CHOOSE INFRAVISION CARDS STYLING --- */
@@ -7389,5 +7494,10 @@ input, select, textarea, button {
 .why-feature-card h3.text-white,
 .why-feature-card .text-white {
   color: #0f172a !important;
+}
+
+/* Set FAQ badge text color to pure white */
+.modern-faq-section .faq-badge-pill {
+  color: #FFFFFF !important;
 }
 

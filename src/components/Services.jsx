@@ -1,32 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 const Services = () => {
-  const [serviceList, setServiceList] = useState([
-    {
-      image: 'assets/images/service_residential.jpg',
-      icon: 'fa-house-chimney',
-      title: 'Residential Construction',
-      description: 'Custom luxury villas, estates, and eco-friendly smart homes engineered for modern comfort, energy efficiency, and premium longevity.'
-    },
-    {
-      image: 'assets/images/service_commercial.jpg',
-      icon: 'fa-building',
-      title: 'Commercial Construction',
-      description: 'High-performance office complexes, retail centers, and industrial facilities planned with scalable layouts and robust building physics.'
-    },
-    {
-      image: 'assets/images/service_renovation.jpg',
-      icon: 'fa-trowel-bricks',
-      title: 'Renovation & Remodeling',
-      description: 'Transforming historic or dated structures into contemporary spaces, adding modern utility while maintaining architectural integrity.'
-    }
-  ]);
+  const [serviceList, setServiceList] = useState([]);
 
   useEffect(() => {
     fetch('/api/services.php')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setServiceList(data);
         }
       })
@@ -60,23 +41,29 @@ const Services = () => {
         </div>
 
         <div className="grid-layout services-grid">
-          {serviceList.map((service, index) => (
-            <div key={index} className="card service-card scroll-reveal">
-              <div className="service-card-image-wrapper">
-                <img src={service.image} alt={service.title} className="service-card-img" />
-              </div>
-              <div className="service-card-body">
-                <div className="service-icon">
-                  <i className={`fa-solid ${service.icon}`}></i>
+          {serviceList.length > 0 ? (
+            serviceList.map((service, index) => (
+              <div key={index} className="card service-card scroll-reveal">
+                <div className="service-card-image-wrapper">
+                  <img src={service.image ? (service.image.startsWith('http') || service.image.startsWith('/') ? service.image : '/' + service.image) : ''} alt={service.title} className="service-card-img" />
                 </div>
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-description">{service.description}</p>
-                <a href="#contact" className="service-link" onClick={scrollToContact}>
-                  Learn More <i className="fa-solid fa-chevron-right icon-right-sm"></i>
-                </a>
+                <div className="service-card-body">
+                  <div className="service-icon">
+                    <i className={`fa-solid ${service.icon}`}></i>
+                  </div>
+                  <h3 className="service-title">{service.title}</h3>
+                  <p className="service-description">{service.description}</p>
+                  <a href="#contact" className="service-link" onClick={scrollToContact}>
+                    Learn More <i className="fa-solid fa-chevron-right icon-right-sm"></i>
+                  </a>
+                </div>
               </div>
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', padding: '40px 0', color: 'rgba(0,0,0,0.4)', fontSize: '0.9rem' }}>
+              No services uploaded yet.
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

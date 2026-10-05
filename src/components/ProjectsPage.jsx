@@ -1,62 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const ProjectsPage = ({ setCurrentPage }) => {
-  const [projectsData, setProjectsData] = useState([
-    {
-      id: 1,
-      title: 'The Aurelia Villa',
-      description: 'A luxurious modern residential estate featuring high-concept geometric architecture and open light-filled spaces.',
-      image: 'assets/images/project1.jpg',
-      category: 'Residential',
-      location: 'Beverly Hills, CA',
-      year: '2025',
-      client: 'Private Owner',
-      specs: {
-        area: '8,500 sq ft',
-        concrete: 'Grade M40 Self-Healing',
-        framing: 'Heavy Timber & Structural Steel',
-        leed: 'Gold Certified'
-      }
-    },
-    {
-      id: 2,
-      title: 'Vertex Office Tower',
-      description: 'A pioneering commercial skyscraper incorporating sustainable green design elements and advanced structural steel systems.',
-      image: 'assets/images/project2.jpg',
-      category: 'Commercial',
-      location: 'Seattle, WA',
-      year: '2026',
-      client: 'Vertex Holdings',
-      specs: {
-        area: '185,000 sq ft',
-        concrete: 'High-Strength Eco-Concrete',
-        framing: 'Structural Carbon Steel Grade 50',
-        leed: 'Platinum Certified'
-      }
-    },
-    {
-      id: 3,
-      title: 'Ironclad Warehouse Loft',
-      description: 'A modern industrial warehouse conversion preserving classic brick and iron elements while integrating high-end modern amenities.',
-      image: 'assets/images/project4.jpg',
-      category: 'Industrial',
-      location: 'Portland, OR',
-      year: '2024',
-      client: 'Ironclad Development',
-      specs: {
-        area: '42,000 sq ft',
-        concrete: 'Reinforced Retrofit Slabs',
-        framing: 'Exposed Steel Spans',
-        leed: 'Certified Silver'
-      }
-    }
-  ]);
+  const [projectsData, setProjectsData] = useState([]);
 
   useEffect(() => {
     fetch('/api/projects.php')
       .then(res => res.json())
       .then(data => {
-        if (data && data.length > 0) {
+        if (Array.isArray(data)) {
           setProjectsData(data);
         }
       })
@@ -176,18 +127,22 @@ const ProjectsPage = ({ setCurrentPage }) => {
               onClick={() => setSelectedProject(project)}
             >
               <div className="card-image-panel">
-                <img src={project.image} alt={project.title} className="card-panel-img" />
-                <div className="card-panel-overlay">
-                  <span>View Details <i className="fa-solid fa-expand"></i></span>
-                </div>
+                <img src={project.image ? (project.image.startsWith('http') || project.image.startsWith('/') ? project.image : '/' + project.image) : ''} alt={project.title} className="card-panel-img" />
+                <div className="card-panel-overlay"></div>
               </div>
               <div className="card-content-panel">
                 <span className="text-xs font-bold text-highlight-mint uppercase tracking-wider block mb-2">{project.category}</span>
                 <h3 className="card-panel-title m-0 mb-2">{project.title}</h3>
                 <p className="card-panel-desc m-0">{project.description}</p>
-                <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/6 text-xs text-white/50">
-                  <span><i className="fa-solid fa-location-dot mr-1"></i>{project.location}</span>
-                  <span><i className="fa-regular fa-calendar-check mr-1"></i>{project.year}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', width: '100%', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fa-solid fa-location-dot" style={{ color: 'var(--clr-primary)' }}></i>
+                    {project.location}
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fa-regular fa-calendar-check" style={{ color: 'var(--clr-primary)' }}></i>
+                    {project.year}
+                  </span>
                 </div>
               </div>
             </div>

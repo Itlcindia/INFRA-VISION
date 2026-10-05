@@ -5,71 +5,14 @@ const ServicesPage = ({ setCurrentPage }) => {
   const [showCards, setShowCards] = useState(false);
   const canvasRef = useRef(null);
 
-  const [serviceList, setServiceList] = useState([
-    {
-      id: 1,
-      image: 'assets/images/service_residential.jpg',
-      icon: 'fa-house-chimney',
-      title: 'Residential Construction',
-      description: 'Custom luxury villas, estates, and eco-friendly smart homes engineered for modern comfort, energy efficiency, and premium longevity.',
-      details: {
-        timeline: '8 - 14 Months',
-        materials: 'Eco-Concrete M40, Recycled Steel, Premium Timber',
-        rating: 'A+ Structural Integrity Passed',
-        solar: 'Full integration with APN Solar systems',
-        costIndex: 'Custom bidding available'
-      }
-    },
-    {
-      id: 2,
-      image: 'assets/images/service_commercial.jpg',
-      icon: 'fa-building',
-      title: 'Commercial Construction',
-      description: 'High-performance office complexes, retail centers, and industrial facilities planned with scalable layouts and robust building physics.',
-      details: {
-        timeline: '12 - 24 Months',
-        materials: 'Grade 50 Carbon Steel, Reinforced Fire-concrete, Energy glass',
-        rating: 'OSHA Zero-Incident Approved',
-        solar: 'High-capacity roof grid layouts and net metering',
-        costIndex: 'Standard corporate framework bids'
-      }
-    },
-    {
-      id: 3,
-      image: 'assets/images/service_renovation.jpg',
-      icon: 'fa-trowel-bricks',
-      title: 'Renovation & Remodeling',
-      description: 'Transforming historic or dated structures into contemporary spaces, adding modern utility while maintaining architectural integrity.',
-      details: {
-        timeline: '3 - 6 Months',
-        materials: 'Custom retrofitted steel beams, composite insulation panels',
-        rating: 'ISO 9001 Structural Restoration Certified',
-        solar: 'Retrofit solar hot water and electrical tie-in',
-        costIndex: 'Phased inspection estimations'
-      }
-    },
-    {
-      id: 4,
-      image: 'assets/images/process_planning.jpg',
-      icon: 'fa-compass-drafting',
-      title: 'Architectural Space Planning',
-      description: 'Optimized interior load paths, virtual 3D floor plan walk-throughs, and custom room layouts for modern commercial or residential settings.',
-      details: {
-        timeline: '1 - 2 Months',
-        materials: 'AutoCAD, Revit, and BIM compliance specifications',
-        rating: 'AIA Registered design blueprints',
-        solar: 'Sun-path optimization layouts for natural thermal heating',
-        costIndex: 'Per square foot design rates'
-      }
-    }
-  ]);
+  const [serviceList, setServiceList] = useState([]);
 
   // Load from API
   useEffect(() => {
     fetch('/api/services.php')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setServiceList(data);
         }
       })
@@ -188,10 +131,8 @@ const ServicesPage = ({ setCurrentPage }) => {
               onClick={() => setSelectedService(service)}
             >
               <div className="card-image-panel">
-                <img src={service.image} alt={service.title} className="card-panel-img" />
-                <div className="card-panel-overlay">
-                  <span>View Specifications <i className="fa-solid fa-arrow-right"></i></span>
-                </div>
+                <img src={service.image ? (service.image.startsWith('http') || service.image.startsWith('/') ? service.image : '/' + service.image) : ''} alt={service.title} className="card-panel-img" />
+                <div className="card-panel-overlay"></div>
               </div>
               <div className="card-content-panel">
                 <div className="card-icon-badge">
